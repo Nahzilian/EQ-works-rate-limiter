@@ -1,0 +1,26 @@
+{
+  "name": "eq-works-rate-limiter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nahzilian/EQ-works-rate-limiter.git"
+  },
+  "author": "Doug Nguyen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nahzilian/EQ-works-rate-limiter/issues"
+  },
+  "homepage": "https://github.com/Nahzilian/EQ-works-rate-limiter#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "pg": "^8.5.1"
+  }
+}
