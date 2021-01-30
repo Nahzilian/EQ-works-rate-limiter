@@ -4,7 +4,7 @@
 const requestIp = require('request-ip');
 
 
-const numberOfRequest = 3;
+const numberOfRequest = 10;
 const requestInterval = 3000; // In miliseconds
 var requests = {}
 
