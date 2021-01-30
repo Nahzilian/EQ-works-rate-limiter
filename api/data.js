@@ -117,13 +117,5 @@ app.get('/poi', (req, res, next) => {
   `
   return next()
 }, queryHandler)
-app.get('/poi_list', (req, res, next) => {
-  req.sqlQuery = `
-    SELECT name, poi_id
-    FROM public.poi;
-  `
-  return next()
-}, queryHandler)
-
 
 module.exports = app
