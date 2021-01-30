@@ -12,7 +12,6 @@ const pool = new pg.Pool(
   }
 )
 
-
 const queryHandler = (req, res, next) => {
   console.log(req.originalUrl)
   pool.query(req.sqlQuery).then((r) => {
@@ -26,12 +25,22 @@ const queryHandler = (req, res, next) => {
 }
 
 app.get('/events/hourly', (req, res, next) => {
+  console.log(req.query.id)
   req.sqlQuery = `
     SELECT date, hour, events
     FROM public.hourly_events
     ORDER BY date, hour
     LIMIT 168;
   `
+  if(req.query.id){
+    req.sqlQuery = `
+    SELECT date, hour, events
+    FROM public.hourly_events
+    WHERE public.hourly_events.poi_id = ${req.query.id}
+    ORDER BY date, hour
+    LIMIT 168;
+  `
+  }
   return next()
 }, queryHandler)
 
@@ -43,6 +52,16 @@ app.get('/events/daily', (req, res, next) => {
     ORDER BY date
     LIMIT 7;
   `
+  if(req.query.id){
+    req.sqlQuery = `
+    SELECT date, SUM(events) AS events
+    FROM public.hourly_events
+    WHERE public.hourly_events.poi_id = ${req.query.id}
+    GROUP BY date
+    ORDER BY date
+    LIMIT 7;
+  `
+  }
   return next()
 }, queryHandler)
 
@@ -53,6 +72,15 @@ app.get('/stats/hourly', (req, res, next) => {
     ORDER BY date, hour
     LIMIT 168;
   `
+  if(req.query.id){
+    req.sqlQuery = `
+    SELECT date, hour, impressions, clicks, revenue
+    FROM public.hourly_stats
+    WHERE public.hourly_stats.poi_id = ${req.query.id}
+    ORDER BY date, hour
+    LIMIT 168;
+  `
+  }
   return next()
 }, queryHandler)
 
@@ -67,6 +95,19 @@ app.get('/stats/daily', (req, res, next) => {
     ORDER BY date
     LIMIT 7;
   `
+  if(req.query.id){
+    req.sqlQuery = `
+    SELECT date,
+        SUM(impressions) AS impressions,
+        SUM(clicks) AS clicks,
+        SUM(revenue) AS revenue
+    FROM public.hourly_stats
+    WHERE public.hourly_stats.poi_id = ${req.query.id}
+    GROUP BY date
+    ORDER BY date
+    LIMIT 7;
+  `
+  }
   return next()
 }, queryHandler)
 app.get('/poi', (req, res, next) => {
@@ -80,27 +121,6 @@ app.get('/poi_list', (req, res, next) => {
   req.sqlQuery = `
     SELECT name, poi_id
     FROM public.poi;
-  `
-  return next()
-}, queryHandler)
-app.get('/events/hourlypoi', (req, res, next) => {
-  req.sqlQuery = `
-    SELECT *
-    FROM public.hourly_events
-    ORDER BY date, hour
-    LIMIT 168;
-  `
-  return next()
-}, queryHandler)
-
-app.get('/events/dailypoi', (req, res, next) => {
-  req.sqlQuery = `
-    SELECT date, SUM(events) AS events
-    FROM public.hourly_events
-    WHERE public.hourly_events.poi_id = ${req.query.id}
-    GROUP BY date
-    ORDER BY date
-    LIMIT 7;
   `
   return next()
 }, queryHandler)
