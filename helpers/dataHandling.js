@@ -10,4 +10,4 @@ const timeConverter = (time) => {
 
 module.exports = {
     timeConverter,
-}; 
+};
