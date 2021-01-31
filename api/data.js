@@ -32,9 +32,9 @@ app.get('/events/hourly', (req, res, next) => {
     ORDER BY date, hour
     LIMIT 168;
   `
-  if(req.query.id){
+  if (req.query.id) {
     req.sqlQuery = `
-    SELECT date, hour, events
+    SELECT date, hour, events, poi_id
     FROM public.hourly_events
     WHERE public.hourly_events.poi_id = ${req.query.id}
     ORDER BY date, hour
@@ -52,7 +52,7 @@ app.get('/events/daily', (req, res, next) => {
     ORDER BY date
     LIMIT 7;
   `
-  if(req.query.id){
+  if (req.query.id) {
     req.sqlQuery = `
     SELECT date, SUM(events) AS events
     FROM public.hourly_events
@@ -72,7 +72,7 @@ app.get('/stats/hourly', (req, res, next) => {
     ORDER BY date, hour
     LIMIT 168;
   `
-  if(req.query.id){
+  if (req.query.id) {
     req.sqlQuery = `
     SELECT date, hour, impressions, clicks, revenue
     FROM public.hourly_stats
@@ -95,7 +95,7 @@ app.get('/stats/daily', (req, res, next) => {
     ORDER BY date
     LIMIT 7;
   `
-  if(req.query.id){
+  if (req.query.id) {
     req.sqlQuery = `
     SELECT date,
         SUM(impressions) AS impressions,
@@ -117,5 +117,6 @@ app.get('/poi', (req, res, next) => {
   `
   return next()
 }, queryHandler)
+
 
 module.exports = app
