@@ -2,13 +2,15 @@ const express = require('express');
 const pg = require('pg')
 const app = express()
 const helpers = require('../helpers/dataHandling')
+const dotenv = require('dotenv');
+dotenv.config();
 const pool = new pg.Pool(
   {
-    user: 'readonly',
-    host: 'work-samples-db.cx4wctygygyq.us-east-1.rds.amazonaws.com',
-    database: 'work_samples',
-    password: 'w2UIO@#bg532!',
-    port: 5432,
+    user: `${process.env.PGUSER}`,
+    host: `${process.env.PGHOST}`,
+    database: `${process.env.PGDATABASE}`,
+    password: `${process.env.PGPASSWORD}`,
+    port: `${process.env.PGPORT}`,
   }
 )
 

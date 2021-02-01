@@ -5,7 +5,7 @@ const leaky = require('./leaky-bucket/leaky')
 
 const dataRoute = require('./api/data');
 
-// app.use(leaky);
+app.use(leaky);
 app.use(cors())
 
 app.use('/',dataRoute)
