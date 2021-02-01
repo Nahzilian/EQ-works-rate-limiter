@@ -1,84 +1,14 @@
 const express = require('express')
-
-const pg = require('pg')
-const app = express()
+const app = express();
+const cors = require('cors')
 const leaky = require('./leaky-bucket/leaky')
 
-const pool = new pg.Pool(
-    {
-        user: 'readonly',
-        host: 'work-samples-db.cx4wctygygyq.us-east-1.rds.amazonaws.com',
-        database: 'work_samples',
-        password: 'w2UIO@#bg532!',
-        port: 5432,
-    }
-)
-
-const queryHandler = (req, res, next) => {
-  pool.query(req.sqlQuery).then((r) => {
-    return res.json(r.rows || [])
-  }).catch(next)
-}
+const dataRoute = require('./api/data');
 
 app.use(leaky);
+app.use(cors())
 
-
-app.get('/', (req, res) => {
-  res.send('Welcome to EQ Works 😎')
-})
-
-app.get('/events/hourly', (req, res, next) => {
-  req.sqlQuery = `
-    SELECT date, hour, events
-    FROM public.hourly_events
-    ORDER BY date, hour
-    LIMIT 168;
-  `
-  return next()
-}, queryHandler)
-
-app.get('/events/daily', (req, res, next) => {
-  req.sqlQuery = `
-    SELECT date, SUM(events) AS events
-    FROM public.hourly_events
-    GROUP BY date
-    ORDER BY date
-    LIMIT 7;
-  `
-  return next()
-}, queryHandler)
-
-app.get('/stats/hourly', (req, res, next) => {
-  req.sqlQuery = `
-    SELECT date, hour, impressions, clicks, revenue
-    FROM public.hourly_stats
-    ORDER BY date, hour
-    LIMIT 168;
-  `
-  return next()
-}, queryHandler)
-
-app.get('/stats/daily', (req, res, next) => {
-  req.sqlQuery = `
-    SELECT date,
-        SUM(impressions) AS impressions,
-        SUM(clicks) AS clicks,
-        SUM(revenue) AS revenue
-    FROM public.hourly_stats
-    GROUP BY date
-    ORDER BY date
-    LIMIT 7;
-  `
-  return next()
-}, queryHandler)
-
-app.get('/poi', (req, res, next) => {
-  req.sqlQuery = `
-    SELECT *
-    FROM public.poi;
-  `
-  return next()
-}, queryHandler)
+app.use('/',dataRoute)
 
 app.listen(process.env.PORT || 5555, (err) => {
   if (err) {

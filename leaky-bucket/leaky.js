@@ -4,8 +4,8 @@
 const requestIp = require('request-ip');
 
 
-const numberOfRequest = 3;
-const requestInterval = 3000; // In miliseconds
+const numberOfRequest = 10;
+const requestInterval = 1500; // In miliseconds
 var requests = {}
 
 module.exports = function (req, res, next) {
