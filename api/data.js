@@ -2,6 +2,8 @@ const express = require('express');
 const pg = require('pg')
 const app = express()
 const helpers = require('../helpers/dataHandling')
+
+// Getting environment vars 
 const dotenv = require('dotenv');
 dotenv.config();
 const pool = new pg.Pool(
@@ -14,6 +16,8 @@ const pool = new pg.Pool(
   }
 )
 
+
+// Executing queries from endpoint => check endpoint to reformat the date
 const queryHandler = (req, res, next) => {
   console.log(req.originalUrl)
   pool.query(req.sqlQuery).then((r) => {
@@ -26,6 +30,8 @@ const queryHandler = (req, res, next) => {
   }).catch(next)
 }
 
+
+// Check if endpoint needs to include Geo POI information
 app.get('/events/hourly', (req, res, next) => {
   req.sqlQuery = `
     SELECT date, hour, events
@@ -44,6 +50,7 @@ app.get('/events/hourly', (req, res, next) => {
   return next()
 }, queryHandler)
 
+// Check if endpoint needs to include Geo POI information
 app.get('/events/daily', (req, res, next) => {
   req.sqlQuery = `
     SELECT date, SUM(events) AS events
@@ -65,6 +72,7 @@ app.get('/events/daily', (req, res, next) => {
   return next()
 }, queryHandler)
 
+// Check if endpoint needs to include Geo POI information
 app.get('/stats/hourly', (req, res, next) => {
   req.sqlQuery = `
     SELECT date, hour, impressions, clicks, revenue
@@ -91,6 +99,7 @@ app.get('/stats/hourly', (req, res, next) => {
   return next()
 }, queryHandler)
 
+// Check if endpoint needs to include Geo POI information
 app.get('/stats/daily', (req, res, next) => {
   req.sqlQuery = `
     SELECT date,

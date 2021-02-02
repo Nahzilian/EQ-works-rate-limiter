@@ -1,3 +1,4 @@
+// Set up
 const express = require('express')
 const app = express();
 const cors = require('cors')
@@ -5,9 +6,15 @@ const leaky = require('./leaky-bucket/leaky')
 
 const dataRoute = require('./api/data');
 
+// Import Leaky bucket and Cors
 app.use(leaky);
 app.use(cors())
 
+app.get('/', (req, res) => {
+  res.send('Welcome to EQ Works 😎')
+})
+
+// Include dataRoute
 app.use('/',dataRoute)
 
 app.listen(process.env.PORT || 5555, (err) => {

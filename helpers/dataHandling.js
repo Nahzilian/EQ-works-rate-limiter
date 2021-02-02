@@ -1,3 +1,7 @@
+/**
+ * @param {*} time 
+ * Reformatting the date to shorter format
+ */
 const timeConverter = (time) => {
     const d = new Date(time);
     var curr_date = d.getDate();
